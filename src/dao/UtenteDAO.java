@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtenteDAO {
+public class UtenteDAO implements UtenteDAOInterface {
 
+    @Override
     public Utente login(String email, String password) throws SQLException {
         String sql = "SELECT matricola, nome, cognome, email FROM Utente " +
                 "WHERE email = ? AND password = ?";
@@ -28,11 +29,12 @@ public class UtenteDAO {
                             rs.getString("email")
                     );
                 }
-                return null; // credenziali non valide
+                return null;
             }
         }
     }
 
+    @Override
     public List<Utente> cercaUtenti(String testo) throws SQLException {
         String sql = "SELECT matricola, nome, cognome, email FROM Utente " +
                 "WHERE nome ILIKE ? OR cognome ILIKE ? OR matricola ILIKE ?";
