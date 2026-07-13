@@ -27,8 +27,8 @@ public class LoginFrame extends JFrame {
         setContentPane(panelLogin);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-        setLocationRelativeTo(null); // centra la finestra sullo schermo
-
+        setResizable(false); // <-- impedisce ridimensionamento e massimizzazione
+        setLocationRelativeTo(null);
         accediButton.addActionListener(this::onLogin);
     }
 
@@ -36,7 +36,6 @@ public class LoginFrame extends JFrame {
         String email = campoEmail.getText().trim();
         String password = new String(campoPassword.getPassword());
 
-        // Validazione lato GUI: evitiamo di interrogare il DB per input palesemente vuoti
         if (email.isEmpty() || password.isEmpty()) {
             mostraErrore("Inserisci email e password");
             return;
@@ -50,13 +49,12 @@ public class LoginFrame extends JFrame {
                 return;
             }
 
-            System.out.println("Login riuscito: " + utente);
-            // Prossimo step: aprire MainFrame passandogli l'utente loggato
-            dispose(); // chiude questa finestra
+            dispose();
+            SwingUtilities.invokeLater(() -> new MainFrame(utente).setVisible(true));
 
         } catch (SQLException ex) {
             mostraErrore("Errore di connessione al database");
-            ex.printStackTrace(); // utile in fase di sviluppo per vedere lo stack completo in console
+            ex.printStackTrace();
         }
     }
 

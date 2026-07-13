@@ -71,7 +71,7 @@ public class GruppoDAO implements GruppoDAOInterface {
     }
 
     private int calcolaNumPartecipanti(Connection conn, int idGruppo) throws SQLException {
-        String sql = "SELECT calcola_numpartecipanti(?) AS num";
+        String sql = "SELECT calcola_num_partecipanti(?) AS num"; // <-- aggiunto underscore
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idGruppo);
             try (ResultSet rs = ps.executeQuery()) {

@@ -15,7 +15,7 @@ public class SpesaDAO implements SpesaDAOInterface {
         String nomeProcedura = switch (spesa.getTipologia()) {
             case spesaComune -> "registra_spesa_comune";
             case spesaIndividuale -> "registra_spesa_individuale";
-            case saldatura -> throw new IllegalArgumentException(
+            case saldo -> throw new IllegalArgumentException(
                     "Le saldature si registrano con saldaDebito(), non inserisciSpesa()");
         };
 
