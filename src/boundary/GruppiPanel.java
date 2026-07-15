@@ -128,6 +128,14 @@ public class GruppiPanel extends JPanel {
     }
 
     private void onNuovoGruppo() {
-        JOptionPane.showMessageDialog(this, "Dialog nuovo gruppo (in arrivo)");
+        NuovoGruppoDialog dialog = new NuovoGruppoDialog(
+                (JFrame) SwingUtilities.getWindowAncestor(this),
+                mainController.getUtenteLoggato().getMatricola());
+        dialog.setVisible(true);
+
+        if (dialog.isGruppoCreato()) {
+            caricaGruppi(); // ricarica la lista dopo la creazione
+        }
     }
 }
+
