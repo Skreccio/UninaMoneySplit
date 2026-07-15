@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="boundary.GruppiPanel">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="cbdf5" binding="headerPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="53255" class="javax.swing.JLabel" binding="labelTitolo">
+            <constraints border-constraint="West"/>
+            <properties>
+              <text value="I miei gruppi"/>
+            </properties>
+          </component>
+          <component id="55b12" class="javax.swing.JButton" binding="bottoneNuovoGruppo">
+            <constraints border-constraint="East"/>
+            <properties>
+              <text value="+ Nuovo gruppo"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <scrollpane id="d60cb" binding="scrollGruppi">
+        <constraints border-constraint="Center"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="e76bb" binding="listaGruppiPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints/>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+        </children>
+      </scrollpane>
+    </children>
+  </grid>
+</form>

@@ -23,11 +23,18 @@ public class MainController {
     // TEMPORANEO: GruppiPanel e InvitiPanel non sono ancora stati creati.
 
     public void showPanel(String nomePanel) {
+        if (nomePanel.equals("gruppi")) {
+            boundary.GruppiPanel gruppiPanel = new boundary.GruppiPanel();
+            gruppiPanel.caricaGruppi(utenteLoggato, this);
+            mainFrame.setContentPanel(gruppiPanel.getRootPanel());
+            return;
+        }
+
         JPanel placeholder = new JPanel(new BorderLayout());
         JLabel label = new JLabel("Pannello: " + nomePanel, SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(20f));
         placeholder.add(label, BorderLayout.CENTER);
 
         mainFrame.setContentPanel(placeholder);
+     }
     }
-}
