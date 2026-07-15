@@ -20,14 +20,20 @@ public class MainController {
         return utenteLoggato;
     }
 
-    // TEMPORANEO: GruppiPanel e InvitiPanel non sono ancora stati creati.
-
     public void showPanel(String nomePanel) {
+        switch (nomePanel) {
+            case "gruppi" -> mainFrame.setContentPanel(new boundary.GruppiPanel(this));
+            case "inviti" -> mainFrame.setContentPanel(placeholderInviti());
+            default -> throw new IllegalArgumentException("Pannello sconosciuto: " + nomePanel);
+        }
+    }
+
+    // TEMPORANEO: InvitiPanel non è ancora stato creato.
+    private JPanel placeholderInviti() {
         JPanel placeholder = new JPanel(new BorderLayout());
-        JLabel label = new JLabel("Pannello: " + nomePanel, SwingConstants.CENTER);
+        JLabel label = new JLabel("Pannello: inviti", SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(20f));
         placeholder.add(label, BorderLayout.CENTER);
-
-        mainFrame.setContentPanel(placeholder);
+        return placeholder;
     }
 }
