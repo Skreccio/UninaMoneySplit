@@ -30,4 +30,17 @@ public class Utente {
     public String toString() {
         return nome + " " + cognome;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Utente altro = (Utente) o;
+        return matricola.equals(altro.matricola);
+    }
+
+    @Override
+    public int hashCode() {
+        return matricola.hashCode();
+    }
 }

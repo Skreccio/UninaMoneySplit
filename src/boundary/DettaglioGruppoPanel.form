@@ -7,52 +7,67 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="d4084" binding="headerPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="12f24" binding="headerPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints border-constraint="North"/>
         <properties/>
         <border type="none"/>
-        <children/>
+        <children>
+          <component id="28fa7" class="javax.swing.JLabel" binding="labelNomeGruppo">
+            <constraints border-constraint="West"/>
+            <properties>
+              <text value="Nome gruppo"/>
+            </properties>
+          </component>
+          <grid id="da681" binding="pannelloBottoni" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="f41ee" class="javax.swing.JButton" binding="bottoneNuovaSpesa">
+                <constraints/>
+                <properties>
+                  <text value="Nuova spesa"/>
+                </properties>
+              </component>
+              <component id="d44bd" class="javax.swing.JButton" binding="bottoneAzzeraSaldo">
+                <constraints/>
+                <properties>
+                  <text value="Azzera saldo"/>
+                </properties>
+              </component>
+              <component id="d63b2" class="javax.swing.JButton" binding="bottoneReport">
+                <constraints/>
+                <properties>
+                  <text value="Vedi report"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
       </grid>
-      <component id="34930" class="javax.swing.JLabel">
-        <constraints border-constraint="West"/>
-        <properties>
-          <text value="Label"/>
-        </properties>
-      </component>
-      <component id="c5ba7" class="javax.swing.JButton" binding="button1" default-binding="true">
-        <constraints border-constraint="East"/>
-        <properties>
-          <text value="Button"/>
-        </properties>
-      </component>
-      <grid id="1e07a" binding="contenutoPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
-        <constraints border-constraint="South"/>
+      <grid id="5f681" binding="contenutoPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="7646f" binding="pannelloSaldi" layout-manager="BorderLayout" hgap="0" vgap="0">
-            <constraints border-constraint="North"/>
-            <properties/>
-            <border type="none"/>
-            <children/>
-          </grid>
-          <scrollpane id="946dc">
+          <grid id="28413" binding="pannelloSaldi" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="2026c" class="javax.swing.JTable" binding="tabellaSpese">
-                <constraints/>
+              <scrollpane id="8186f" binding="TabellaSpese">
+                <constraints border-constraint="Center"/>
                 <properties/>
-              </component>
+                <border type="none"/>
+                <children>
+                  <component id="d70b9" class="javax.swing.JTable" binding="tabellaSpese">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
-          </scrollpane>
-          <component id="c4ad8" class="javax.swing.JButton" binding="bottoneReport">
-            <constraints border-constraint="South"/>
-            <properties>
-              <text value="Button"/>
-            </properties>
-          </component>
+          </grid>
         </children>
       </grid>
     </children>

@@ -20,4 +20,8 @@ public class SaldoUtente {
     public double getCredito() { return credito; }
     public double getDebito() { return debito; }
     public double getSaldo() { return saldo; }
+    @Override
+    public String toString() {
+        return nomeUtente;
+    }
 }

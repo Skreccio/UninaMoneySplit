@@ -1,7 +1,14 @@
 package boundary;
 
+import control.GruppoController;
+import control.MainController;
+import entity.Gruppo;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 public class GruppiPanel extends JPanel {
     private JPanel panel1;
@@ -49,14 +56,15 @@ public class GruppiPanel extends JPanel {
     public JComponent $$$getRootComponent$$$() {
         return panel1;
     }
-    private final control.MainController mainController;
-    private final control.GruppoController gruppoController = new control.GruppoController();
 
-    public GruppiPanel(control.MainController mainController) {
+    private final MainController mainController;
+    private final GruppoController gruppoController = new GruppoController();
+
+    public GruppiPanel(MainController mainController) {
         this.mainController = mainController;
 
-        setLayout(new java.awt.BorderLayout());
-        add(panel1, java.awt.BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        add(panel1, BorderLayout.CENTER);
 
         listaGruppiPanel.setLayout(new BoxLayout(listaGruppiPanel, BoxLayout.Y_AXIS));
 
@@ -69,7 +77,7 @@ public class GruppiPanel extends JPanel {
         listaGruppiPanel.removeAll();
 
         try {
-            java.util.List<entity.Gruppo> gruppi = gruppoController.getGruppiUtente(
+            java.util.List<Gruppo> gruppi = gruppoController.getGruppiUtente(
                     mainController.getUtenteLoggato().getMatricola());
 
             if (gruppi.isEmpty()) {
@@ -77,13 +85,13 @@ public class GruppiPanel extends JPanel {
                 vuoto.setAlignmentX(Component.LEFT_ALIGNMENT);
                 listaGruppiPanel.add(vuoto);
             } else {
-                for (entity.Gruppo gruppo : gruppi) {
+                for (Gruppo gruppo : gruppi) {
                     listaGruppiPanel.add(creaGruppoCard(gruppo));
                     listaGruppiPanel.add(Box.createVerticalStrut(10));
                 }
             }
 
-        } catch (java.sql.SQLException ex) {
+        } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Errore nel caricamento dei gruppi");
             ex.printStackTrace();
         }
@@ -92,7 +100,7 @@ public class GruppiPanel extends JPanel {
         listaGruppiPanel.repaint();
     }
 
-    private JPanel creaGruppoCard(entity.Gruppo gruppo) {
+    private JPanel creaGruppoCard(Gruppo gruppo) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -110,9 +118,9 @@ public class GruppiPanel extends JPanel {
         card.add(labelNome);
         card.add(labelInfo);
 
-        card.addMouseListener(new java.awt.event.MouseAdapter() {
+        card.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 onSelezionaGruppo(gruppo);
             }
         });
@@ -121,10 +129,8 @@ public class GruppiPanel extends JPanel {
         return card;
     }
 
-    private void onSelezionaGruppo(entity.Gruppo gruppo) {
-        JOptionPane.showMessageDialog(this,
-                "Apertura dettaglio gruppo: " + gruppo.getNome() + "\n(schermata in arrivo)",
-                "In sviluppo", JOptionPane.INFORMATION_MESSAGE);
+    private void onSelezionaGruppo(Gruppo gruppo) {
+        mainController.mostraDettaglioGruppo(gruppo);
     }
 
     private void onNuovoGruppo() {
