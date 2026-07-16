@@ -1,10 +1,9 @@
 package control;
 
 import boundary.MainFrame;
+import boundary.InvitiPanel;
+import boundary.GruppiPanel;
 import entity.Utente;
-
-import javax.swing.*;
-import java.awt.*;
 
 public class MainController {
 
@@ -22,18 +21,9 @@ public class MainController {
 
     public void showPanel(String nomePanel) {
         switch (nomePanel) {
-            case "gruppi" -> mainFrame.setContentPanel(new boundary.GruppiPanel(this));
-            case "inviti" -> mainFrame.setContentPanel(placeholderInviti());
+            case "gruppi" -> mainFrame.setContentPanel(new GruppiPanel(this));
+            case "inviti" -> mainFrame.setContentPanel(new InvitiPanel(this));
             default -> throw new IllegalArgumentException("Pannello sconosciuto: " + nomePanel);
         }
-    }
-
-    // TEMPORANEO: InvitiPanel non è ancora stato creato.
-    private JPanel placeholderInviti() {
-        JPanel placeholder = new JPanel(new BorderLayout());
-        JLabel label = new JLabel("Pannello: inviti", SwingConstants.CENTER);
-        label.setFont(label.getFont().deriveFont(20f));
-        placeholder.add(label, BorderLayout.CENTER);
-        return placeholder;
     }
 }

@@ -3,6 +3,14 @@ package entity;
 import java.time.LocalDate;
 
 public class Invito {
+    private String nomeDestinatario;
+    private String cognomeDestinatario;
+
+    public String getNomeDestinatario() { return nomeDestinatario; }
+    public void setNomeDestinatario(String nomeDestinatario) { this.nomeDestinatario = nomeDestinatario; }
+
+    public String getCognomeDestinatario() { return cognomeDestinatario; }
+    public void setCognomeDestinatario(String cognomeDestinatario) { this.cognomeDestinatario = cognomeDestinatario; }
     private int idInvito;
     private StatoInvito stato;
     private LocalDate dataInvito;

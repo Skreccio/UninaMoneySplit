@@ -19,16 +19,16 @@ public class SpesaDAO implements SpesaDAOInterface {
                     "Le saldature si registrano con saldaDebito(), non inserisciSpesa()");
         };
 
-        String call = "{call " + nomeProcedura + "(?, ?, ?, ?)}";
+        String sql = "CALL " + nomeProcedura + "(?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(call)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            cs.setString(1, spesa.getDescrizioneSpesa());
-            cs.setDouble(2, spesa.getImportoTotale());
-            cs.setString(3, spesa.getMatricolaPagante());
-            cs.setInt(4, spesa.getIdGruppo());
-            cs.execute();
+            ps.setString(1, spesa.getDescrizioneSpesa());
+            ps.setDouble(2, spesa.getImportoTotale());
+            ps.setString(3, spesa.getMatricolaPagante());
+            ps.setInt(4, spesa.getIdGruppo());
+            ps.execute();
         }
     }
 
@@ -36,16 +36,16 @@ public class SpesaDAO implements SpesaDAOInterface {
     public void saldaDebito(String matricolaDebitore, String matricolaCreditore,
                             int idGruppo, double importo) throws SQLException {
 
-        String call = "{call salda_debito(?, ?, ?, ?)}";
+        String sql = "CALL salda_debito(?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(call)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            cs.setString(1, matricolaDebitore);
-            cs.setString(2, matricolaCreditore);
-            cs.setInt(3, idGruppo);
-            cs.setDouble(4, importo);
-            cs.execute();
+            ps.setString(1, matricolaDebitore);
+            ps.setString(2, matricolaCreditore);
+            ps.setInt(3, idGruppo);
+            ps.setDouble(4, importo);
+            ps.execute();
         }
     }
 

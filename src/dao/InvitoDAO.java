@@ -14,15 +14,15 @@ public class InvitoDAO implements InvitoDAOInterface {
     public void inserisciInvito(String matricolaMittente, String matricolaDestinatario, int idGruppo)
             throws SQLException {
 
-        String call = "{call invia_invito(?, ?, ?)}";
+        String sql = "CALL invia_invito(?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(call)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            cs.setString(1, matricolaMittente);
-            cs.setString(2, matricolaDestinatario);
-            cs.setInt(3, idGruppo);
-            cs.execute();
+            ps.setString(1, matricolaMittente);
+            ps.setString(2, matricolaDestinatario);
+            ps.setInt(3, idGruppo);
+            ps.execute();
         }
     }
 
@@ -67,14 +67,14 @@ public class InvitoDAO implements InvitoDAOInterface {
     @Override
     public void aggiornaStato(int idInvito, StatoInvito nuovoStato) throws SQLException {
         if (nuovoStato == StatoInvito.rifiutato) {
-            String call = "{call rifiuta_invito(?)}";
+            String sql = "CALL rifiuta_invito(?)";
             try (Connection conn = DBConnection.getConnection();
-                 CallableStatement cs = conn.prepareCall(call)) {
-                cs.setInt(1, idInvito);
-                cs.execute();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, idInvito);
+                ps.execute();
             }
         } else {
-            String sql = "UPDATE Invito SET stato = ? WHERE id_invito = ?";
+            String sql = "UPDATE Invito SET stato = ?::statoInvito WHERE id_invito = ?"; // <-- cast esplicito
             try (Connection conn = DBConnection.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, nuovoStato.name());
@@ -82,5 +82,72 @@ public class InvitoDAO implements InvitoDAOInterface {
                 ps.executeUpdate();
             }
         }
+    }
+    @Override
+    public List<Invito> getInvitiInviati(String matricolaMittente) throws SQLException {
+        String sql = "SELECT * FROM lista_inviti_inviati(?)";
+
+        List<Invito> inviti = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, matricolaMittente);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Invito invito = new Invito(
+                            rs.getInt("id_invito"),
+                            StatoInvito.valueOf(rs.getString("stato")),
+                            rs.getDate("datainvito").toLocalDate(),
+                            matricolaMittente,
+                            null, // la funzione non restituisce la matricola del destinatario, solo nome/cognome
+                            0     // idem per id_gruppo: non serve per questa vista di sola lettura
+                    );
+                    invito.setNomeDestinatario(rs.getString("nome_destinatario"));
+                    invito.setCognomeDestinatario(rs.getString("cognome_destinatario"));
+                    invito.setNomeGruppo(rs.getString("nome_gruppo"));
+                    inviti.add(invito);
+                }
+            }
+        }
+        return inviti;
+    }
+    @Override
+    public List<Invito> getStoricoRicevuti(String matricolaDestinatario) throws SQLException {
+        String sql = "SELECT i.id_invito, i.stato, i.datainvito, i.matricola_mittente, " +
+                "i.matricola_destinatario, i.id_gruppo, " +
+                "u.nome AS nome_mittente, u.cognome AS cognome_mittente, g.nome AS nome_gruppo " +
+                "FROM Invito i " +
+                "JOIN Utente u ON u.matricola = i.matricola_mittente " +
+                "JOIN Gruppo g ON g.id_gruppo = i.id_gruppo " +
+                "WHERE i.matricola_destinatario = ? " +
+                "ORDER BY i.datainvito DESC";
+
+        List<Invito> inviti = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, matricolaDestinatario);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Invito invito = new Invito(
+                            rs.getInt("id_invito"),
+                            StatoInvito.valueOf(rs.getString("stato")),
+                            rs.getDate("datainvito").toLocalDate(),
+                            rs.getString("matricola_mittente"),
+                            rs.getString("matricola_destinatario"),
+                            rs.getInt("id_gruppo")
+                    );
+                    invito.setNomeMittente(rs.getString("nome_mittente"));
+                    invito.setCognomeMittente(rs.getString("cognome_mittente"));
+                    invito.setNomeGruppo(rs.getString("nome_gruppo"));
+                    inviti.add(invito);
+                }
+            }
+        }
+        return inviti;
     }
 }

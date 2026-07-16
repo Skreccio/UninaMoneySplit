@@ -37,4 +37,10 @@ public class InvitoController {
     public List<Utente> cercaUtenti(String testo) throws SQLException {
         return utenteDAO.cercaUtenti(testo);
     }
+    public List<Invito> getInvitiInviati(String matricola) throws SQLException {
+        return invitoDAO.getInvitiInviati(matricola);
+    }
+    public List<Invito> getStoricoRicevuti(String matricola) throws SQLException {
+        return invitoDAO.getStoricoRicevuti(matricola);
+    }
 }

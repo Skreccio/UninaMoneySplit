@@ -12,15 +12,15 @@ public class GruppoDAO implements GruppoDAOInterface {
 
     @Override
     public int inserisciGruppo(Gruppo gruppo) throws SQLException {
-        String call = "{call crea_gruppo(?, ?, ?)}";
+        String sqlCall = "CALL crea_gruppo(?, ?, ?)"; // <-- CALL letterale, non {call ...}
 
         try (Connection conn = DBConnection.getConnection();
-             CallableStatement cs = conn.prepareCall(call)) {
+             PreparedStatement ps = conn.prepareStatement(sqlCall)) {
 
-            cs.setString(1, gruppo.getNome());
-            cs.setString(2, gruppo.getDescrizioneGruppo());
-            cs.setString(3, gruppo.getMatricolaCreatore());
-            cs.execute();
+            ps.setString(1, gruppo.getNome());
+            ps.setString(2, gruppo.getDescrizioneGruppo());
+            ps.setString(3, gruppo.getMatricolaCreatore());
+            ps.execute();
         }
 
         String sql = "SELECT id_gruppo FROM Gruppo WHERE matricola_creatore = ? " +
