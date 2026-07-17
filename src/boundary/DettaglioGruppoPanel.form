@@ -51,23 +51,22 @@
         <border type="none"/>
         <children>
           <grid id="28413" binding="pannelloSaldi" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="North"/>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+          <scrollpane id="d9cf2" binding="TabellaSpese">
             <constraints border-constraint="Center"/>
             <properties/>
             <border type="none"/>
             <children>
-              <scrollpane id="8186f" binding="TabellaSpese">
-                <constraints border-constraint="Center"/>
+              <component id="e1ac0" class="javax.swing.JTable" binding="tabellaSpese">
+                <constraints/>
                 <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="d70b9" class="javax.swing.JTable" binding="tabellaSpese">
-                    <constraints/>
-                    <properties/>
-                  </component>
-                </children>
-              </scrollpane>
+              </component>
             </children>
-          </grid>
+          </scrollpane>
         </children>
       </grid>
     </children>

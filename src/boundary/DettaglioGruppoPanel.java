@@ -142,9 +142,15 @@ public class DettaglioGruppoPanel extends JPanel {
     }
 
     private void onNuovaSpesa() {
-        JOptionPane.showMessageDialog(this,
-                "Dialog Nuova spesa in arrivo",
-                "In sviluppo", JOptionPane.INFORMATION_MESSAGE);
+        NuovaSpesaDialog dialog = new NuovaSpesaDialog(
+                (JFrame) SwingUtilities.getWindowAncestor(this),
+                gruppo,
+                mainController.getUtenteLoggato().getMatricola());
+        dialog.setVisible(true);
+
+        if (dialog.isSpesaCreata()) {
+            caricaDati(); // ricarica saldi e storico dopo il salvataggio
+        }
     }
 
     private void onVediReport() {
@@ -159,7 +165,17 @@ public class DettaglioGruppoPanel extends JPanel {
             List<SaldoUtente> saldi = gruppoController.getSaldi(gruppo.getIdGruppo());
             String matricolaUtente = mainController.getUtenteLoggato().getMatricola();
 
-            // Non ha senso saldare un debito con se stessi: li togliamo dalla scelta
+            // Trova il MIO saldo per capire se sono in credito o in debito
+            SaldoUtente mioSaldo = saldi.stream()
+                    .filter(s -> s.getMatricola().equals(matricolaUtente))
+                    .findFirst()
+                    .orElse(null);
+
+            if (mioSaldo == null) {
+                JOptionPane.showMessageDialog(this, "Impossibile trovare il tuo saldo nel gruppo");
+                return;
+            }
+
             List<SaldoUtente> altriPartecipanti = saldi.stream()
                     .filter(s -> !s.getMatricola().equals(matricolaUtente))
                     .toList();
@@ -169,12 +185,12 @@ public class DettaglioGruppoPanel extends JPanel {
                 return;
             }
 
-            JComboBox<SaldoUtente> comboCreditore = new JComboBox<>(altriPartecipanti.toArray(new SaldoUtente[0]));
+            JComboBox<SaldoUtente> comboAltro = new JComboBox<>(altriPartecipanti.toArray(new SaldoUtente[0]));
             JTextField campoImporto = new JTextField();
 
             JPanel form = new JPanel(new GridLayout(2, 2, 5, 5));
             form.add(new JLabel("Salda con:"));
-            form.add(comboCreditore);
+            form.add(comboAltro);
             form.add(new JLabel("Importo:"));
             form.add(campoImporto);
 
@@ -193,12 +209,17 @@ public class DettaglioGruppoPanel extends JPanel {
                 return;
             }
 
-            SaldoUtente creditore = (SaldoUtente) comboCreditore.getSelectedItem();
+            SaldoUtente altro = (SaldoUtente) comboAltro.getSelectedItem();
 
-            spesaController.saldaDebito(matricolaUtente, creditore.getMatricola(),
+            // Se il MIO saldo è positivo, sono in credito: l'altra persona mi deve pagare (è lei il debitore)
+            // Se il MIO saldo è negativo, sono in debito: sono io che devo pagare (sono io il debitore)
+            String matricolaDebitore = (mioSaldo.getSaldo() >= 0) ? altro.getMatricola() : matricolaUtente;
+            String matricolaCreditore = (mioSaldo.getSaldo() >= 0) ? matricolaUtente : altro.getMatricola();
+
+            spesaController.saldaDebito(matricolaDebitore, matricolaCreditore,
                     gruppo.getIdGruppo(), importo);
 
-            caricaDati(); // ricarica saldi e storico spese dopo la saldatura
+            caricaDati();
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this,
@@ -247,9 +268,9 @@ public class DettaglioGruppoPanel extends JPanel {
         panel1.add(contenutoPanel, BorderLayout.CENTER);
         pannelloSaldi = new JPanel();
         pannelloSaldi.setLayout(new BorderLayout(0, 0));
-        contenutoPanel.add(pannelloSaldi, BorderLayout.CENTER);
+        contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);
         TabellaSpese = new JScrollPane();
-        pannelloSaldi.add(TabellaSpese, BorderLayout.CENTER);
+        contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);
         tabellaSpese = new JTable();
         TabellaSpese.setViewportView(tabellaSpese);
     }

@@ -19,8 +19,7 @@ public class SpesaDAO implements SpesaDAOInterface {
                     "Le saldature si registrano con saldaDebito(), non inserisciSpesa()");
         };
 
-        String sql = "CALL " + nomeProcedura + "(?, ?, ?, ?)";
-
+        String sql = "CALL " + nomeProcedura + "(?::text, ?::numeric, ?::char(9), ?::integer)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -36,7 +35,7 @@ public class SpesaDAO implements SpesaDAOInterface {
     public void saldaDebito(String matricolaDebitore, String matricolaCreditore,
                             int idGruppo, double importo) throws SQLException {
 
-        String sql = "CALL salda_debito(?, ?, ?, ?)";
+        String sql = "CALL salda_debito(?, ?, ?, ?::numeric)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
