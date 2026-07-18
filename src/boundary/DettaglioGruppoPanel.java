@@ -39,7 +39,29 @@ public class DettaglioGruppoPanel extends JPanel {
         setLayout(new BorderLayout());
         add(panel1, BorderLayout.CENTER);
 
-        labelNomeGruppo.setText(gruppo.getNome());
+        // FIX: il designer ha annidato la tabella dentro pannelloSaldi per errore.
+        // Li separiamo qui via codice, senza dover intervenire sul file .form.
+        pannelloSaldi.remove(TabellaSpese);          // toglie la scrollpane da dove non deve stare
+        contenutoPanel.remove(pannelloSaldi);        // stacca temporaneamente pannelloSaldi
+        contenutoPanel.setLayout(new BorderLayout());
+        contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);   // i saldi vanno sopra
+        contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);   // la tabella occupa il resto
+        contenutoPanel.revalidate();
+
+        String descrizione = gruppo.getDescrizioneGruppo();
+        if (descrizione != null && !descrizione.isBlank()) {
+            labelNomeGruppo.setText("<html><b>" + gruppo.getNome() + "</b><br>"
+                    + "<span style='font-size:11px;color:gray;'>" + descrizione + "</span></html>");
+            headerPanel.setPreferredSize(new Dimension(headerPanel.getPreferredSize().width, 60));
+        } else {
+            labelNomeGruppo.setText(gruppo.getNome());
+        }
+
+        headerPanel.revalidate();
+        headerPanel.repaint();
+        revalidate();
+        repaint();
+
 
         pannelloSaldi.setLayout(new BoxLayout(pannelloSaldi, BoxLayout.X_AXIS));
 
@@ -81,6 +103,7 @@ public class DettaglioGruppoPanel extends JPanel {
 
             for (SaldoUtente saldo : saldi) {
                 pannelloSaldi.add(creaSaldoCard(saldo));
+
                 pannelloSaldi.add(Box.createHorizontalStrut(10));
             }
 
@@ -109,6 +132,32 @@ public class DettaglioGruppoPanel extends JPanel {
         card.add(labelNome);
         card.add(labelSaldo);
 
+        // Dettaglio bilaterale: solo per gli altri, non per la propria card
+        String matricolaLoggato = mainController.getUtenteLoggato().getMatricola();
+        if (!saldo.getMatricola().equals(matricolaLoggato)) {
+            try {
+                double ioDevo = gruppoController.getDebitoVerso(matricolaLoggato, saldo.getMatricola(), gruppo.getIdGruppo());
+                double luiDeve = gruppoController.getDebitoVerso(saldo.getMatricola(), matricolaLoggato, gruppo.getIdGruppo());
+
+                JLabel labelDettaglio;
+                if (ioDevo > 0) {
+                    labelDettaglio = new JLabel(String.format("Devi: %.2f €", ioDevo));
+                    labelDettaglio.setForeground(Color.RED);
+                } else if (luiDeve > 0) {
+                    labelDettaglio = new JLabel(String.format("Ti deve: %.2f €", luiDeve));
+                    labelDettaglio.setForeground(new Color(0, 150, 0));
+                } else {
+                    labelDettaglio = new JLabel("In pari");
+                    labelDettaglio.setForeground(Color.GRAY);
+                }
+                labelDettaglio.setFont(labelDettaglio.getFont().deriveFont(11f));
+                card.add(labelDettaglio);
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         return card;
     }
 
@@ -123,7 +172,7 @@ public class DettaglioGruppoPanel extends JPanel {
                 String tipo = switch (spesa.getTipologia()) {
                     case spesaComune -> "Comune";
                     case spesaIndividuale -> "Personale";
-                    case saldo -> "Saldatura";
+                    case saldo -> "Saldo";
                 };
 
                 model.addRow(new Object[]{
@@ -154,9 +203,7 @@ public class DettaglioGruppoPanel extends JPanel {
     }
 
     private void onVediReport() {
-        JOptionPane.showMessageDialog(this,
-                "ReportPanel in arrivo",
-                "In sviluppo", JOptionPane.INFORMATION_MESSAGE);
+        mainController.mostraReport(gruppo);
     }
 
     // Azzera saldo: chiede a chi (tra gli altri partecipanti) rimborsare e quanto
@@ -164,17 +211,6 @@ public class DettaglioGruppoPanel extends JPanel {
         try {
             List<SaldoUtente> saldi = gruppoController.getSaldi(gruppo.getIdGruppo());
             String matricolaUtente = mainController.getUtenteLoggato().getMatricola();
-
-            // Trova il MIO saldo per capire se sono in credito o in debito
-            SaldoUtente mioSaldo = saldi.stream()
-                    .filter(s -> s.getMatricola().equals(matricolaUtente))
-                    .findFirst()
-                    .orElse(null);
-
-            if (mioSaldo == null) {
-                JOptionPane.showMessageDialog(this, "Impossibile trovare il tuo saldo nel gruppo");
-                return;
-            }
 
             List<SaldoUtente> altriPartecipanti = saldi.stream()
                     .filter(s -> !s.getMatricola().equals(matricolaUtente))
@@ -211,14 +247,26 @@ public class DettaglioGruppoPanel extends JPanel {
 
             SaldoUtente altro = (SaldoUtente) comboAltro.getSelectedItem();
 
-            // Se il MIO saldo è positivo, sono in credito: l'altra persona mi deve pagare (è lei il debitore)
-            // Se il MIO saldo è negativo, sono in debito: sono io che devo pagare (sono io il debitore)
-            String matricolaDebitore = (mioSaldo.getSaldo() >= 0) ? altro.getMatricola() : matricolaUtente;
-            String matricolaCreditore = (mioSaldo.getSaldo() >= 0) ? matricolaUtente : altro.getMatricola();
+            // Guardiamo il debito SPECIFICO tra queste due persone, non il saldo aggregato
+            double ioDevoALui = gruppoController.getDebitoVerso(matricolaUtente, altro.getMatricola(), gruppo.getIdGruppo());
+            double luiDeveAMe = gruppoController.getDebitoVerso(altro.getMatricola(), matricolaUtente, gruppo.getIdGruppo());
 
-            spesaController.saldaDebito(matricolaDebitore, matricolaCreditore,
-                    gruppo.getIdGruppo(), importo);
+            String matricolaDebitore;
+            String matricolaCreditore;
 
+            if (ioDevoALui > 0) {
+                matricolaDebitore = matricolaUtente;
+                matricolaCreditore = altro.getMatricola();
+            } else if (luiDeveAMe > 0) {
+                matricolaDebitore = altro.getMatricola();
+                matricolaCreditore = matricolaUtente;
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Non c'è nessun debito da saldare con " + altro.getNomeUtente());
+                return;
+            }
+
+            spesaController.saldaDebito(matricolaDebitore, matricolaCreditore, gruppo.getIdGruppo(), importo);
             caricaDati();
 
         } catch (SQLException ex) {
@@ -228,58 +276,5 @@ public class DettaglioGruppoPanel extends JPanel {
         }
     }
 
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        panel1 = new JPanel();
-        panel1.setLayout(new BorderLayout(0, 0));
-        headerPanel = new JPanel();
-        headerPanel.setLayout(new BorderLayout(0, 0));
-        panel1.add(headerPanel, BorderLayout.NORTH);
-        labelNomeGruppo = new JLabel();
-        labelNomeGruppo.setText("Nome gruppo");
-        headerPanel.add(labelNomeGruppo, BorderLayout.WEST);
-        pannelloBottoni = new JPanel();
-        pannelloBottoni.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        headerPanel.add(pannelloBottoni, BorderLayout.EAST);
-        bottoneNuovaSpesa = new JButton();
-        bottoneNuovaSpesa.setText("Nuova spesa");
-        pannelloBottoni.add(bottoneNuovaSpesa);
-        bottoneAzzeraSaldo = new JButton();
-        bottoneAzzeraSaldo.setText("Azzera saldo");
-        pannelloBottoni.add(bottoneAzzeraSaldo);
-        bottoneReport = new JButton();
-        bottoneReport.setText("Vedi report");
-        pannelloBottoni.add(bottoneReport);
-        contenutoPanel = new JPanel();
-        contenutoPanel.setLayout(new BorderLayout(0, 0));
-        panel1.add(contenutoPanel, BorderLayout.CENTER);
-        pannelloSaldi = new JPanel();
-        pannelloSaldi.setLayout(new BorderLayout(0, 0));
-        contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);
-        TabellaSpese = new JScrollPane();
-        contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);
-        tabellaSpese = new JTable();
-        TabellaSpese.setViewportView(tabellaSpese);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return panel1;
-    }
 
 }

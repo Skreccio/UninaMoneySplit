@@ -62,4 +62,20 @@ public class UtenteDAO implements UtenteDAOInterface {
         }
         return risultati;
     }
+
+    @Override
+    public void registraUtente(String matricola, String nome, String cognome, String email, String password) throws SQLException {
+        String sql = "INSERT INTO Utente (matricola, nome, cognome, email, password) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, matricola);
+            ps.setString(2, nome);
+            ps.setString(3, cognome);
+            ps.setString(4, email);
+            ps.setString(5, password);
+            ps.executeUpdate();
+        }
+    }
 }

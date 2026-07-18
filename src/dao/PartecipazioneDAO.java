@@ -52,4 +52,24 @@ public class PartecipazioneDAO implements PartecipazioneDAOInterface {
             }
         }
     }
+    @Override
+    public double getDebitoVerso(String matricolaDebitore, String matricolaCreditore, int idGruppo) throws SQLException {
+        String sql = "SELECT COALESCE(SUM(calcola_quota_dovuta(q.id_spesa)), 0) AS debito " +
+                "FROM QuotaSpesa q JOIN Spesa s ON s.id_spesa = q.id_spesa " +
+                "WHERE q.matricola_debitore = ? AND s.matricola_pagante = ? AND s.id_gruppo = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, matricolaDebitore);
+            ps.setString(2, matricolaCreditore);
+            ps.setInt(3, idGruppo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getDouble("debito");
+            }
+        }
+    }
+
 }

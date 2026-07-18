@@ -1,11 +1,10 @@
 package control;
 
-import boundary.MainFrame;
-import boundary.InvitiPanel;
 import boundary.GruppiPanel;
-import entity.Utente;
-import boundary.DettaglioGruppoPanel;
+import boundary.InvitiPanel;
+import boundary.MainFrame;
 import entity.Gruppo;
+import entity.Utente;
 
 public class MainController {
 
@@ -26,12 +25,16 @@ public class MainController {
             case "gruppi" -> mainFrame.setContentPanel(new GruppiPanel(this));
             case "inviti" -> mainFrame.setContentPanel(new InvitiPanel(this));
             default -> throw new IllegalArgumentException("Pannello sconosciuto: " + nomePanel);
-
-
         }
     }
 
-        public void mostraDettaglioGruppo(Gruppo gruppo) {
-            mainFrame.setContentPanel(new DettaglioGruppoPanel(this, gruppo));
-        }
+    // Navigazione verso il dettaglio di un gruppo specifico
+    public void mostraDettaglioGruppo(Gruppo gruppo) {
+        mainFrame.setContentPanel(new boundary.DettaglioGruppoPanel(this, gruppo));
     }
+
+    // Navigazione verso il report di un gruppo specifico
+    public void mostraReport(Gruppo gruppo) {
+        mainFrame.setContentPanel(new boundary.ReportPanel(this, gruppo));
+    }
+}

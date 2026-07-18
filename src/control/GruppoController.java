@@ -31,4 +31,8 @@ public class GruppoController {
     public List<SaldoUtente> getSaldi(int idGruppo) throws SQLException {
         return gruppoDAO.getSaldiByGruppo(idGruppo);
     }
+
+    public double getDebitoVerso(String matricolaDebitore, String matricolaCreditore, int idGruppo) throws SQLException {
+        return partecipazioneDAO.getDebitoVerso(matricolaDebitore, matricolaCreditore, idGruppo);
+    }
 }
