@@ -37,7 +37,6 @@ public class NuovaSpesaDialog extends JDialog {
     private final String matricolaUtenteLoggato;
     private boolean spesaCreata = false;
 
-    // Etichette leggibili mostrate all'utente, mappate poi sull'enum vero
     private static final String LABEL_COMUNE = "Comune";
     private static final String LABEL_PERSONALE = "Personale";
 
@@ -55,7 +54,6 @@ public class NuovaSpesaDialog extends JDialog {
 
         caricaPartecipanti();
 
-        // Aggiorna l'anteprima ogni volta che cambia tipo o importo
         comboTipo.addItemListener(e -> aggiornaAnteprimaQuota());
         campoImporto.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -77,10 +75,9 @@ public class NuovaSpesaDialog extends JDialog {
         bottoneAnnulla.addActionListener(e -> dispose());
         bottoneSalva.addActionListener(e -> onSalva());
         util.UIStyle.accentua(bottoneSalva);
-        aggiornaAnteprimaQuota(); // stato iniziale
+        aggiornaAnteprimaQuota();
     }
 
-    // Riempie la combo "Pagante" con i partecipanti del gruppo, preselezionando l'utente loggato
     private void caricaPartecipanti() {
         try {
             List<SaldoUtente> saldi = gruppoController.getSaldi(gruppo.getIdGruppo());
@@ -97,7 +94,6 @@ public class NuovaSpesaDialog extends JDialog {
         }
     }
 
-    // Mostra a quanto ammonta la quota a testa se la spesa è comune; nasconde tutto se è personale
     private void aggiornaAnteprimaQuota() {
         pannelloQuota.removeAll();
 
@@ -121,7 +117,6 @@ public class NuovaSpesaDialog extends JDialog {
         pannelloQuota.repaint();
     }
 
-    // Legge l'importo dal campo senza mai lanciare eccezioni: usato solo per l'anteprima live
     private double leggiImportoSicuro() {
         try {
             return Double.parseDouble(campoImporto.getText().trim().replace(",", "."));
@@ -153,7 +148,6 @@ public class NuovaSpesaDialog extends JDialog {
                 ? TipoSpesa.spesaComune
                 : TipoSpesa.spesaIndividuale;
 
-        // idSpesa e dataSpesa non servono in inserimento: li assegna il database
         Spesa nuovaSpesa = new Spesa(0, tipologia, descrizione, importo,
                 null, pagante.getMatricola(), gruppo.getIdGruppo());
 

@@ -35,8 +35,6 @@ public class NuovoGruppoDialog extends JDialog {
     private final String matricolaCreatore;
     private boolean gruppoCreato = false;
 
-    // Insieme persistente delle selezioni, sopravvive ai cambi di filtro nella ricerca.
-    // LinkedHashSet mantiene l'ordine di inserimento ed evita duplicati automaticamente.
     private final Set<Utente> selezionati = new LinkedHashSet<>();
 
     public NuovoGruppoDialog(JFrame parent, String matricolaCreatore) {
@@ -51,7 +49,6 @@ public class NuovoGruppoDialog extends JDialog {
 
         campoRicerca.addCaretListener(e -> onCercaUtenti());
 
-        // Doppio click su un risultato di ricerca: lo aggiunge alla selezione
         listaUtenti.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -61,7 +58,6 @@ public class NuovoGruppoDialog extends JDialog {
             }
         });
 
-        // Doppio click su un utente già selezionato: lo rimuove
         listaSelezionati.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -87,7 +83,6 @@ public class NuovoGruppoDialog extends JDialog {
         try {
             List<Utente> risultati = invitoController.cercaUtenti(testo);
             risultati.removeIf(u -> u.getMatricola().equals(matricolaCreatore));
-            // Non ripropone chi è già stato selezionato, evita confusione visiva
             risultati.removeIf(selezionati::contains);
 
             listaUtenti.setListData(new Vector<>(risultati));
@@ -97,12 +92,11 @@ public class NuovoGruppoDialog extends JDialog {
         }
     }
 
-    // Sposta gli utenti evidenziati nei risultati di ricerca dentro l'insieme "selezionati"
     private void onAggiungiSelezionati() {
         List<Utente> daAggiungere = listaUtenti.getSelectedValuesList();
         selezionati.addAll(daAggiungere);
         aggiornaListaSelezionati();
-        onCercaUtenti(); // rifiltra, cosi' chi e' stato appena selezionato sparisce dai risultati
+        onCercaUtenti();
     }
 
     private void onRimuoviSelezionato() {

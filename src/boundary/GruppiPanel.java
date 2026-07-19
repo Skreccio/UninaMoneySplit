@@ -99,8 +99,7 @@ public class GruppiPanel extends JPanel {
         dialog.setVisible(true);
 
         if (dialog.isGruppoCreato()) {
-            caricaGruppi(); // ricarica la lista dopo la creazione
+            caricaGruppi();
         }
     }
 }
-

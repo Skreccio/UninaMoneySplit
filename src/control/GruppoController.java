@@ -16,11 +16,11 @@ public class GruppoController {
     private final PartecipazioneDAOInterface partecipazioneDAO = new PartecipazioneDAO();
 
     public Gruppo creaGruppo(String nome, String descrizione, String matricolaCreatore) throws SQLException {
-        Gruppo gruppo = new Gruppo(0, nome, descrizione, matricolaCreatore); // id fittizio, sostituito sotto
+        Gruppo gruppo = new Gruppo(0, nome, descrizione, matricolaCreatore);
         int idGruppo = gruppoDAO.inserisciGruppo(gruppo);
 
         Gruppo gruppoCreato = new Gruppo(idGruppo, nome, descrizione, matricolaCreatore);
-        gruppoCreato.setNumPartecipanti(1); // solo il creatore, appena creato
+        gruppoCreato.setNumPartecipanti(1);
         return gruppoCreato;
     }
 

@@ -28,7 +28,7 @@ public class LoginFrame extends JFrame {
         setContentPane(panelLogin);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-        setMinimumSize(new Dimension(550, 380)); // dimensione minima più comoda
+        setMinimumSize(new Dimension(550, 380));
         setSize(550, 380);
         setResizable(false);
         setLocationRelativeTo(null);

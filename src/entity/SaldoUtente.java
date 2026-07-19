@@ -2,7 +2,7 @@ package entity;
 
 public class SaldoUtente {
     private String matricola;
-    private String nomeUtente;   // nome + cognome già concatenati, pronto per la UI
+    private String nomeUtente;
     private double credito;
     private double debito;
     private double saldo;

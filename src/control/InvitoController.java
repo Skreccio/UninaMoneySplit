@@ -27,7 +27,6 @@ public class InvitoController {
 
     public void accettaInvito(int idInvito) throws SQLException {
         invitoDAO.aggiornaStato(idInvito, StatoInvito.accettato);
-        // Nota: la creazione della Partecipazione è delegata al trigger trg_accetta_invito
     }
 
     public void rifiutaInvito(int idInvito) throws SQLException {

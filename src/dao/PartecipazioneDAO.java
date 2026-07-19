@@ -63,8 +63,6 @@ public class PartecipazioneDAO implements PartecipazioneDAOInterface {
             ps.setString(1, matricola);
             ps.setInt(2, idGruppo);
             ps.executeUpdate();
-            // Se matricola == creatore del gruppo, trg_protezione_creatore blocca
-            // questa DELETE lanciando un'eccezione: risale come SQLException a chi chiama.
         }
     }
 

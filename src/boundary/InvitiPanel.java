@@ -29,7 +29,7 @@ public class InvitiPanel extends JPanel {
         setLayout(new BorderLayout());
         add(panel1, BorderLayout.CENTER);
         util.UIStyle.titoloPagina(labelTitolo);
-        tabbedPane.removeAll(); // elimina la tab "Untitled" generata dal designer
+        tabbedPane.removeAll();
 
         costruisciTabRicevuti();
         costruisciTabInviati();
@@ -67,8 +67,6 @@ public class InvitiPanel extends JPanel {
         caricaInviati();
         caricaStorico();
     }
-
-    // ---------- RICEVUTI (solo in attesa, con pulsanti azione) ----------
 
     private void caricaRicevuti() {
         listaRicevutiPanel.removeAll();
@@ -154,8 +152,6 @@ public class InvitiPanel extends JPanel {
         }
     }
 
-    // ---------- INVIATI (quelli che ho spedito io) ----------
-
     private void caricaInviati() {
         listaInviatiPanel.removeAll();
 
@@ -185,8 +181,6 @@ public class InvitiPanel extends JPanel {
         listaInviatiPanel.repaint();
     }
 
-    // ---------- STORICO (tutti i ricevuti, ogni stato) ----------
-
     private void caricaStorico() {
         listaStoricoPanel.removeAll();
 
@@ -215,8 +209,6 @@ public class InvitiPanel extends JPanel {
         listaStoricoPanel.revalidate();
         listaStoricoPanel.repaint();
     }
-
-    // ---------- Componenti condivisi ----------
 
     private JPanel creaCardConStato(String titolo, String sottotitolo, StatoInvito stato) {
         JPanel card = new JPanel(new BorderLayout());

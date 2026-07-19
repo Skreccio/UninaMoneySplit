@@ -30,7 +30,6 @@ public class ReportPanel extends JPanel {
     private final Gruppo gruppo;
     private final ReportController reportController = new ReportController();
 
-
     public ReportPanel(MainController mainController, Gruppo gruppo) {
         this.mainController = mainController;
         this.gruppo = gruppo;

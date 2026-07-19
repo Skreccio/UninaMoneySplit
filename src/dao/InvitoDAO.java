@@ -74,7 +74,7 @@ public class InvitoDAO implements InvitoDAOInterface {
                 ps.execute();
             }
         } else {
-            String sql = "UPDATE Invito SET stato = ?::statoInvito WHERE id_invito = ?"; // <-- cast esplicito
+            String sql = "UPDATE Invito SET stato = ?::statoInvito WHERE id_invito = ?";
             try (Connection conn = DBConnection.getConnection();
                  PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, nuovoStato.name());
@@ -101,8 +101,8 @@ public class InvitoDAO implements InvitoDAOInterface {
                             StatoInvito.valueOf(rs.getString("stato")),
                             rs.getDate("datainvito").toLocalDate(),
                             matricolaMittente,
-                            null, // la funzione non restituisce la matricola del destinatario, solo nome/cognome
-                            0     // idem per id_gruppo: non serve per questa vista di sola lettura
+                            null,
+                            0
                     );
                     invito.setNomeDestinatario(rs.getString("nome_destinatario"));
                     invito.setCognomeDestinatario(rs.getString("cognome_destinatario"));

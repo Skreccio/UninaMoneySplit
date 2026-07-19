@@ -28,12 +28,10 @@ public class MainController {
         }
     }
 
-    // Navigazione verso il dettaglio di un gruppo specifico
     public void mostraDettaglioGruppo(Gruppo gruppo) {
         mainFrame.setContentPanel(new boundary.DettaglioGruppoPanel(this, gruppo));
     }
 
-    // Navigazione verso il report di un gruppo specifico
     public void mostraReport(Gruppo gruppo) {
         mainFrame.setContentPanel(new boundary.ReportPanel(this, gruppo));
     }

@@ -24,9 +24,6 @@ public class SpesaController {
         return spesaDAO.getSpeseByGruppo(idGruppo);
     }
 
-    // Calcolo puramente applicativo, nessun accesso al DB:
-    // utile per mostrare in anteprima la ripartizione nella NuovaSpesaDialog
-    // prima ancora di salvare la spesa (il calcolo definitivo lo fa comunque il DB)
     public double calcolaRipartizioneEqua(double importoTotale, int numPartecipanti) {
         if (numPartecipanti <= 0) {
             return 0.0;

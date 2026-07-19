@@ -40,13 +40,11 @@ public class DettaglioGruppoPanel extends JPanel {
         setLayout(new BorderLayout());
         add(panel1, BorderLayout.CENTER);
 
-        // FIX: il designer ha annidato la tabella dentro pannelloSaldi per errore.
-        // Li separiamo qui via codice, senza dover intervenire sul file .form.
-        pannelloSaldi.remove(TabellaSpese);          // toglie la scrollpane da dove non deve stare
-        contenutoPanel.remove(pannelloSaldi);        // stacca temporaneamente pannelloSaldi
+        pannelloSaldi.remove(TabellaSpese);
+        contenutoPanel.remove(pannelloSaldi);
         contenutoPanel.setLayout(new BorderLayout());
-        contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);   // i saldi vanno sopra
-        contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);   // la tabella occupa il resto
+        contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);
+        contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);
         contenutoPanel.revalidate();
         bottoneEsci.addActionListener(e -> onEsciDalGruppo());
         util.UIStyle.titoloPagina(labelNomeGruppo);
@@ -65,7 +63,6 @@ public class DettaglioGruppoPanel extends JPanel {
         revalidate();
         repaint();
 
-
         pannelloSaldi.setLayout(new BoxLayout(pannelloSaldi, BoxLayout.X_AXIS));
 
         configuraTabella();
@@ -77,13 +74,12 @@ public class DettaglioGruppoPanel extends JPanel {
         caricaDati();
     }
 
-    // Imposta le colonne della tabella e l'ordinamento per data decrescente
     private void configuraTabella() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[]{"Data", "Descrizione", "Tipo", "Pagante", "Importo"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // tabella di sola lettura
+                return false;
             }
         };
         tabellaSpese.setModel(model);
@@ -133,7 +129,6 @@ public class DettaglioGruppoPanel extends JPanel {
         card.add(labelNome);
         card.add(labelSaldo);
 
-        // Dettaglio bilaterale: solo per gli altri, non per la propria card
         String matricolaLoggato = mainController.getUtenteLoggato().getMatricola();
         if (!saldo.getMatricola().equals(matricolaLoggato)) {
             try {
@@ -199,7 +194,7 @@ public class DettaglioGruppoPanel extends JPanel {
         dialog.setVisible(true);
 
         if (dialog.isSpesaCreata()) {
-            caricaDati(); // ricarica saldi e storico dopo il salvataggio
+            caricaDati();
         }
     }
 
@@ -207,7 +202,6 @@ public class DettaglioGruppoPanel extends JPanel {
         mainController.mostraReport(gruppo);
     }
 
-    // Azzera saldo: chiede a chi (tra gli altri partecipanti) rimborsare e quanto
     private void onAzzeraSaldo() {
         try {
             List<SaldoUtente> saldi = gruppoController.getSaldi(gruppo.getIdGruppo());
@@ -248,7 +242,6 @@ public class DettaglioGruppoPanel extends JPanel {
 
             SaldoUtente altro = (SaldoUtente) comboAltro.getSelectedItem();
 
-            // Guardiamo il debito SPECIFICO tra queste due persone, non il saldo aggregato
             double ioDevoALui = gruppoController.getDebitoVerso(matricolaUtente, altro.getMatricola(), gruppo.getIdGruppo());
             double luiDeveAMe = gruppoController.getDebitoVerso(altro.getMatricola(), matricolaUtente, gruppo.getIdGruppo());
 
@@ -291,10 +284,9 @@ public class DettaglioGruppoPanel extends JPanel {
             gruppoController.esciDalGruppo(matricolaUtente, gruppo.getIdGruppo());
 
             JOptionPane.showMessageDialog(this, "Hai lasciato il gruppo");
-            mainController.showPanel("gruppi"); // torna alla lista gruppi, questo pannello non è più valido
+            mainController.showPanel("gruppi");
 
         } catch (SQLException ex) {
-            // Il messaggio del trigger trg_protezione_creatore arriva già leggibile qui dentro
             JOptionPane.showMessageDialog(this,
                     "Impossibile uscire dal gruppo:\n" + ex.getMessage(),
                     "Errore", JOptionPane.ERROR_MESSAGE);

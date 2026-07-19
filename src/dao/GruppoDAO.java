@@ -12,7 +12,7 @@ public class GruppoDAO implements GruppoDAOInterface {
 
     @Override
     public int inserisciGruppo(Gruppo gruppo) throws SQLException {
-        String sqlCall = "CALL crea_gruppo(?, ?, ?)"; // <-- CALL letterale, non {call ...}
+        String sqlCall = "CALL crea_gruppo(?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlCall)) {
@@ -71,7 +71,7 @@ public class GruppoDAO implements GruppoDAOInterface {
     }
 
     private int calcolaNumPartecipanti(Connection conn, int idGruppo) throws SQLException {
-        String sql = "SELECT calcola_num_partecipanti(?) AS num"; // <-- aggiunto underscore
+        String sql = "SELECT calcola_num_partecipanti(?) AS num";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idGruppo);
             try (ResultSet rs = ps.executeQuery()) {

@@ -5,7 +5,7 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        FlatLightLaf.setup(); // attiva il look and feel moderno FlatLaf, tema chiaro
+        FlatLightLaf.setup();
 
         SwingUtilities.invokeLater(() -> {
             LoginFrame frame = new LoginFrame();
