@@ -24,9 +24,12 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         setTitle("UninaMoneySplit - Login");
+        util.UIStyle.applicaIcona(this);
         setContentPane(panelLogin);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
+        setMinimumSize(new Dimension(550, 380)); // dimensione minima più comoda
+        setSize(550, 380);
         setResizable(false);
         setLocationRelativeTo(null);
         accediButton.addActionListener(this::onLogin);

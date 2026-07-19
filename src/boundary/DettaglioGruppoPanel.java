@@ -49,6 +49,7 @@ public class DettaglioGruppoPanel extends JPanel {
         contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);   // la tabella occupa il resto
         contenutoPanel.revalidate();
         bottoneEsci.addActionListener(e -> onEsciDalGruppo());
+        util.UIStyle.titoloPagina(labelNomeGruppo);
 
         String descrizione = gruppo.getDescrizioneGruppo();
         if (descrizione != null && !descrizione.isBlank()) {
@@ -121,9 +122,7 @@ public class DettaglioGruppoPanel extends JPanel {
     private JPanel creaSaldoCard(SaldoUtente saldo) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-                BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+        util.UIStyle.arrotonda(card);
 
         JLabel labelNome = new JLabel(saldo.getNomeUtente());
         labelNome.setFont(labelNome.getFont().deriveFont(Font.BOLD, 14f));

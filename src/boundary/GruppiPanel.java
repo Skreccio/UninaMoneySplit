@@ -31,6 +31,7 @@ public class GruppiPanel extends JPanel {
         bottoneNuovoGruppo.addActionListener(e -> onNuovoGruppo());
         util.UIStyle.accentua(bottoneNuovoGruppo);
         caricaGruppi();
+        util.UIStyle.titoloPagina(labelTitolo);
     }
 
     public void caricaGruppi() {
@@ -63,9 +64,7 @@ public class GruppiPanel extends JPanel {
     private JPanel creaGruppoCard(Gruppo gruppo) {
         JPanel card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-                BorderFactory.createEmptyBorder(10, 15, 10, 15)));
+        util.UIStyle.arrotonda(card);
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
 

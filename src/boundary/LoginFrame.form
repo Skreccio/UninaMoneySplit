@@ -44,19 +44,21 @@
       </component>
       <component id="2a22c" class="javax.swing.JLabel" binding="labelBentornato">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="true"/>
+          <font size="20" style="1"/>
           <text value="Bentornato"/>
         </properties>
       </component>
       <component id="452d2" class="javax.swing.JLabel" binding="labelAccedi">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <enabled value="true"/>
+          <font size="16" style="1"/>
           <text value="Accedi al tuo account"/>
         </properties>
       </component>

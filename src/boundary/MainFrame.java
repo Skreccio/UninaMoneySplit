@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame(Utente utenteLoggato) {
         setTitle("UninaMoneySplit");
+        util.UIStyle.applicaIcona(this);
         setContentPane(panel1);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 650);

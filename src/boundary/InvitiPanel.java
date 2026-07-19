@@ -28,7 +28,7 @@ public class InvitiPanel extends JPanel {
 
         setLayout(new BorderLayout());
         add(panel1, BorderLayout.CENTER);
-
+        util.UIStyle.titoloPagina(labelTitolo);
         tabbedPane.removeAll(); // elimina la tab "Untitled" generata dal designer
 
         costruisciTabRicevuti();
