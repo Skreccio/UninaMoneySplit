@@ -76,7 +76,7 @@ public class NuovaSpesaDialog extends JDialog {
 
         bottoneAnnulla.addActionListener(e -> dispose());
         bottoneSalva.addActionListener(e -> onSalva());
-
+        util.UIStyle.accentua(bottoneSalva);
         aggiornaAnteprimaQuota(); // stato iniziale
     }
 

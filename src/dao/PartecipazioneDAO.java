@@ -52,6 +52,22 @@ public class PartecipazioneDAO implements PartecipazioneDAOInterface {
             }
         }
     }
+
+    @Override
+    public void eliminaPartecipazione(String matricola, int idGruppo) throws SQLException {
+        String sql = "DELETE FROM Partecipazione WHERE matricola = ? AND id_gruppo = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, matricola);
+            ps.setInt(2, idGruppo);
+            ps.executeUpdate();
+            // Se matricola == creatore del gruppo, trg_protezione_creatore blocca
+            // questa DELETE lanciando un'eccezione: risale come SQLException a chi chiama.
+        }
+    }
+
     @Override
     public double getDebitoVerso(String matricolaDebitore, String matricolaCreditore, int idGruppo) throws SQLException {
         String sql = "SELECT COALESCE(SUM(calcola_quota_dovuta(q.id_spesa)), 0) AS debito " +
@@ -71,5 +87,4 @@ public class PartecipazioneDAO implements PartecipazioneDAOInterface {
             }
         }
     }
-
 }

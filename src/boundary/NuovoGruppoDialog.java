@@ -73,6 +73,7 @@ public class NuovoGruppoDialog extends JDialog {
 
         bottoneAnnulla.addActionListener(e -> dispose());
         bottoneCrea.addActionListener(e -> onCrea());
+        util.UIStyle.accentua(bottoneCrea);
     }
 
     private void onCercaUtenti() {

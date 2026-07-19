@@ -26,6 +26,7 @@ public class DettaglioGruppoPanel extends JPanel {
     private JPanel pannelloSaldi;
     private JTable tabellaSpese;
     private JScrollPane TabellaSpese;
+    private JButton bottoneEsci;
 
     private final MainController mainController;
     private final Gruppo gruppo;
@@ -47,6 +48,7 @@ public class DettaglioGruppoPanel extends JPanel {
         contenutoPanel.add(pannelloSaldi, BorderLayout.NORTH);   // i saldi vanno sopra
         contenutoPanel.add(TabellaSpese, BorderLayout.CENTER);   // la tabella occupa il resto
         contenutoPanel.revalidate();
+        bottoneEsci.addActionListener(e -> onEsciDalGruppo());
 
         String descrizione = gruppo.getDescrizioneGruppo();
         if (descrizione != null && !descrizione.isBlank()) {
@@ -70,7 +72,7 @@ public class DettaglioGruppoPanel extends JPanel {
         bottoneNuovaSpesa.addActionListener(e -> onNuovaSpesa());
         bottoneAzzeraSaldo.addActionListener(e -> onAzzeraSaldo());
         bottoneReport.addActionListener(e -> onVediReport());
-
+        util.UIStyle.accentua(bottoneNuovaSpesa);
         caricaDati();
     }
 
@@ -276,5 +278,27 @@ public class DettaglioGruppoPanel extends JPanel {
         }
     }
 
+    private void onEsciDalGruppo() {
+        int conferma = JOptionPane.showConfirmDialog(this,
+                "Sei sicuro di voler uscire dal gruppo \"" + gruppo.getNome() + "\"?",
+                "Conferma uscita", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
+        if (conferma != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            String matricolaUtente = mainController.getUtenteLoggato().getMatricola();
+            gruppoController.esciDalGruppo(matricolaUtente, gruppo.getIdGruppo());
+
+            JOptionPane.showMessageDialog(this, "Hai lasciato il gruppo");
+            mainController.showPanel("gruppi"); // torna alla lista gruppi, questo pannello non è più valido
+
+        } catch (SQLException ex) {
+            // Il messaggio del trigger trg_protezione_creatore arriva già leggibile qui dentro
+            JOptionPane.showMessageDialog(this,
+                    "Impossibile uscire dal gruppo:\n" + ex.getMessage(),
+                    "Errore", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

@@ -29,7 +29,7 @@ public class GruppiPanel extends JPanel {
         listaGruppiPanel.setLayout(new BoxLayout(listaGruppiPanel, BoxLayout.Y_AXIS));
 
         bottoneNuovoGruppo.addActionListener(e -> onNuovoGruppo());
-
+        util.UIStyle.accentua(bottoneNuovoGruppo);
         caricaGruppi();
     }
 

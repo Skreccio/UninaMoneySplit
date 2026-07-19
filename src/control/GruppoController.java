@@ -35,4 +35,7 @@ public class GruppoController {
     public double getDebitoVerso(String matricolaDebitore, String matricolaCreditore, int idGruppo) throws SQLException {
         return partecipazioneDAO.getDebitoVerso(matricolaDebitore, matricolaCreditore, idGruppo);
     }
+    public void esciDalGruppo(String matricola, int idGruppo) throws SQLException {
+        partecipazioneDAO.eliminaPartecipazione(matricola, idGruppo);
+    }
 }

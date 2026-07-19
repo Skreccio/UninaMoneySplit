@@ -4,6 +4,7 @@ import control.LoginController;
 import entity.Utente;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
@@ -30,6 +31,7 @@ public class LoginFrame extends JFrame {
         setLocationRelativeTo(null);
         accediButton.addActionListener(this::onLogin);
         bottoneRegistrati.addActionListener(e -> onApriRegistrazione());
+        util.UIStyle.accentua(accediButton);
     }
 
     private void onApriRegistrazione() {

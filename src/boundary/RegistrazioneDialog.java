@@ -3,6 +3,7 @@ package boundary;
 import control.LoginController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.sql.SQLException;
 
 public class RegistrazioneDialog extends JDialog {
@@ -73,4 +74,5 @@ public class RegistrazioneDialog extends JDialog {
     public boolean isRegistrazioneCompletata() {
         return registrazioneCompletata;
     }
+
 }
